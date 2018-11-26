@@ -60,9 +60,10 @@ float TimeLord::MoonPhase(uint8_t * when){
 // at which time the moon was 'new'
 	long d;
 	float p;
+        float fracDay = (((when[tl_hour] * 60.0 + when[tl_minute]) * 60.0) + when[tl_second]) / 86400.0;
 	
 	d=DayNumber(2000+when[tl_year],when[tl_month],when[tl_day])-DayNumber(2000,1,6);
-	p=d/29.530588853; // total lunar cycles since 1/1/2000
+	p=(d+fracDay)/29.530588853; // total lunar cycles since 1/1/2000
 	d=p;
 	p-=d; // p is now the fractional cycle, 0 to (less than) 1
 	return p;
@@ -262,31 +263,35 @@ void TimeLord::Adjust(uint8_t * when, long offset){
 	
 	tmp=nxt+when[tl_day];
 	mod=LengthOfMonth(when);
-	
+
+        when[tl_day] = tmp;
 	if(tmp>mod){
-		tmp-=mod;
-		when[tl_day]=tmp+1;
+            while (tmp>mod) {
+		tmp -= mod;
 		when[tl_month]++;
-	}
-	if(tmp<1){
+                if (when[tl_month] > 12) {
+                    when[tl_month] = 1;
+                    when[tl_year]++;
+                    when[tl_year] += 100;
+                    when[tl_year] %= 100;
+                }
+                mod = LengthOfMonth(when);
+            }
+            when[tl_day]=tmp;
+	} else if (tmp<1) {
+            while (tmp<1) {
 		when[tl_month]--;
+                if (when[tl_month] < 1) {
+                    when[tl_month] = 12;
+                    when[tl_year] --;
+                    when[tl_year] += 100;
+                    when[tl_year] %= 100;
+                }
 		mod=LengthOfMonth(when);
 		when[tl_day]=tmp+mod;
+                tmp += mod;
+            }
 	}
-	
-	tmp=when[tl_year];
-	if(when[tl_month]==0){
-		when[tl_month]=12;
-		tmp--;
-	}
-	if(when[tl_month]>12){
-		when[tl_month]=1;
-		tmp++;
-	}
-	tmp+=100;
-	tmp %= 100;
-	when[tl_year]=tmp;	
-	
 }
 
 bool TimeLord::ComputeSun(uint8_t * when, bool rs) {
