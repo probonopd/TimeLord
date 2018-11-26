@@ -35,15 +35,16 @@ class TimeLord{
 		uint8_t LengthOfMonth(uint8_t *);
 		bool IsLeapYear(int);
 		
+                // these were private
+		void Adjust(uint8_t *, long);
+		long DayNumber(uint16_t, uint8_t, uint8_t);
+		bool InDst(uint8_t *);
 	private:
 		float latitude, longitude;
 		int timezone;
 		uint8_t dstm1, dstw1, dstm2, dstw2, dstadv;
-		void Adjust(uint8_t *, long);
 		bool ComputeSun(uint8_t *, bool);
 		char Signum(int);
 		int Absolute(int);
-		long DayNumber(uint16_t, uint8_t, uint8_t);
-		bool InDst(uint8_t *);
 		uint8_t _season(uint8_t *);
 };
