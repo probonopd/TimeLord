@@ -17,7 +17,7 @@ void setup()
   // as long as the RTC never changes back and forth between DST and non-DST
   tardis.Position(LATITUDE, LONGITUDE); // tell TimeLord where in the world we are
   
-  byte today[] = {  0, 0, 12, 27, 10, 2012    }; // store today's date (at noon) in an array for TimeLord to use
+  byte today[] = { 0, 0, 12, 27, 10, 12 }; // store today's date (at noon) in an array for TimeLord to use (format SS, MM, HH, DD, MM, YY)
 
 if (tardis.SunRise(today)) // if the sun will rise today (it might not, in the [ant]arctic)
    {
