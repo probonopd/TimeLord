@@ -1,7 +1,7 @@
 extern "C" {
 
 	#include <inttypes.h>
-	#include <Math.h>
+	#include <math.h>
 }
 
 #include "TimeLord.h"
